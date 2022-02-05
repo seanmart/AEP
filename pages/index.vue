@@ -11,13 +11,17 @@
       </container>
 
       <div class="c-circle-links w-screen lg:absolute lg:top-0 lg:right-0 lg:bottom-0" ref="container">
-        <container v-if="data.links" navY padT padX class="flex flex-row lg:flex-col" ref="links">
-            <template v-for="link in [...data.links, {}]">
-              <div class="flex-grow-0 flex-shrink-0 w-64 lg:w-full relative rounded-full overflow-hidden" ref="link">
-                <div class="pb-full w-full bg-pink" />
-                <figure v-if="link.image" class="absolute inset-0" v-image="link.image.url" />
+        <container v-if="data.links" navY padT padX ref="links">
+          <div class="lg:flex lg:flex-col relative h-64 sm:h-72 lg:h-auto">
+            <template v-for="link in [...data.links, {fake:true}]">
+              <div class="absolute top-0 left-0 lg:relative lg:flex-grow-0 lg:flex-shrink-0" :class="{'hidden lg:block':link.fake}" ref="link">
+                <div class="w-64 sm:w-72 lg:w-full rounded-full overflow-hidden relative">
+                  <div class="pb-full w-full bg-pink" />
+                  <figure v-if="link.image" class="absolute inset-0" v-image="link.image.url" />
+                </div>
               </div>
             </template>
+          </div>
         </container>
       </div>
 
@@ -120,7 +124,8 @@ export default {
       if (!this.data.links || this.data.links.length == 0) return
 
       this.mq = ScreenBuddy.onLg((matches)=>{
-        gsap.set(this.$refs.links.$el,{clearProps:'all'})
+
+        gsap.set([this.$refs.links.$el,this.$refs.link],{clearProps:'all'})
         this.anim && this.anim.kill()
 
         if (matches){
@@ -140,6 +145,27 @@ export default {
             invalidateOnRefresh: true
           }})
         } else {
+          let gap = 3
+          let offset = 20
+          let limit = (this.$refs.link.length - 1) * (100 + gap)
+
+          gsap.set(this.$refs.link,{x:(i)=> `${(i * (100 + gap)) - offset}%`})
+
+          this.anim = gsap.to(this.$refs.link, {
+            duration: 50,
+            ease: "none",
+            x: `+=${limit}%`,
+            modifiers: {
+              x: gsap.utils.unitize(x => (parseFloat(x) % limit) - (100 + offset), "%") //force x value to be between 0 and 500 using modulus
+            },
+            repeat: -1,
+            scrollTrigger:{
+              trigger:this.$refs.container,
+              start:'top bottom',
+              end:'bottom top',
+              toggleActions:'play pause play none'
+            }
+          });
 
         }
       })

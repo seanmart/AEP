@@ -37,6 +37,12 @@ module.exports = {
       margin:{
         '18': '4.5rem'
       },
+      height:{
+        '68':'17rem'
+      },
+      width:{
+        '68':'17rem'
+      },
       fill: theme => ({
          'red': theme('colors.red'),
          'black': theme('colors.black'),
