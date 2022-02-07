@@ -53,7 +53,7 @@
         <!-- top right -->
         <div class="flex-auto c-feature-stories--min-width mt-5 lg:self-end">
           <div class="featured-stories--max-width c-feature-stories__titles mx-auto lg:mx-0 lg:pl-12 relative overflow-hidden">
-            <h3 class="font-serif text-4xl lg:text-2xl leading-none pb-1" v-html="stories[1].data.title" />
+            <h3 class="font-serif text-4xl leading-none lg:text-2xl lg:leading-none pb-1" v-html="stories[1].data.title" />
           </div>
         </div>
       </div>

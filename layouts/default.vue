@@ -1,5 +1,5 @@
 <template lang="html">
-  <main id="site" class="text-black">
+  <main id="site" class="text-black" :class="{hide}">
     <the-navigation/>
     <div id="scroller">
       <div id="content">
@@ -16,10 +16,12 @@ export default {
     if(process.server) return
     this.initCreated()
   },
+  data:()=>({
+    hide:true
+  }),
   mounted(){
-    gsap.set('#scroller',{opacity:0})
     setTimeout(()=>{
-      gsap.to('#scroller',.25,{opacity:1})
+      gsap.to('#scroller',.25,{opacity:1,onComplete:()=>this.hide = false})
       this.$bus.$emit('REVEAL')
       this.refresh()
     },500)
@@ -93,6 +95,10 @@ body{
 
 #content{
   min-height: 50vh;
+}
+
+.has-js .hide #scroller{
+  opacity: 0
 }
 
 @media screen and (min-width:550px){
