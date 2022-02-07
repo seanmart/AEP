@@ -11,7 +11,7 @@
       </container>
 
       <div class="c-links w-screen lg:absolute lg:top-0 lg:right-0 lg:bottom-0">
-        <container v-if="data.links" nav fullWidth class="c-links__wrapper lg:px-12">
+        <container v-if="data.links" navLarge fullWidth class="c-links__wrapper lg:px-12">
           <div class="relative h-64 sm:h-72 lg:h-auto">
             <template v-for="link in [...data.links, {fake:true}]">
               <div class="c-links__link absolute w-64 top-0 left-0 rounded-full overflow-hidden sm:w-72 lg:w-full lg:relative lg:mb-2" :class="{'hidden lg:block':link.fake}">
