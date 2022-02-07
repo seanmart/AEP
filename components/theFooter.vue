@@ -1,6 +1,9 @@
 <template lang="html">
-  <footer class="bg-black">
-    <container padX padY>
+  <footer class="text-white">
+    <container padTop padBottom class="bg-red">
+      giving options
+    </container>
+    <container padTop padBottom class="bg-black">
       footer
     </container>
   </footer>
@@ -13,6 +16,6 @@ export default {
 
 <style lang="css">
 footer{
-  height: 500px;
+
 }
 </style>

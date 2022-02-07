@@ -1,8 +1,11 @@
 <template lang="html">
   <main id="site" class="text-black">
+    <preloader v-if="renderPreloader"/>
     <the-navigation/>
     <div id="scroller">
-      <nuxt v-if="renderContent"/>
+      <div id="content">
+        <nuxt/>
+      </div>
       <the-footer/>
     </div>
   </main>
@@ -11,33 +14,48 @@
 <script>
 export default {
   data:()=>({
-    renderContent: false
+    renderPreloader: true
   }),
   created(){
     if(process.server) return
     this.initCreated()
   },
   mounted(){
-    !isMobile && this.initSmoothScroll()
-    setTimeout(this.refresh,250)
-    this.renderContent = true
+    gsap.set('#scroller',{opacity:0})
+    this.$bus.$emit('PRELOADER',()=>{
+      gsap.to('#scroller',.25,{opacity:1})
+      this.$bus.$emit('REVEAL')
+      this.renderPreloader = false
+      this.refresh()
+    })
+  },
+  watch:{
+    $route(){
+      this.refresh()
+      gsap.to('#scroller',.25,{delay:.25, opacity:1,onComplete:()=>{
+        !isMobile && ScrollBuddy.update()
+        this.$bus.$emit('REVEAL')
+      }})
+    }
+  },
+  middleware({route, from}){
+    if (process.server || from.path == route.path) return;
+    return new Promise(res =>{
+      gsap.to('#scroller',.25,{opacity:0,onComplete:res})
+    })
   },
   methods:{
     initCreated(){
       let timeout = null
-      let { userAgent, maxTouchPoints, platform } = navigator
-      let conditional = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i
       let html = document.documentElement
-
-      window.isMobile = conditional.test(userAgent) || (platform === "MacIntel" && maxTouchPoints > 1);
-      html.classList.add('has-js')
-      html.classList.add(window.isMobile ? 'is-mobile' : 'is-desktop')
 
       window.addEventListener('resize',()=>{
         timeout && clearTimeout(timeout)
         timeout = setTimeout(()=> {html.classList.remove('is-resizing')},100)
         html.classList.add('is-resizing')
       })
+
+      !isMobile && this.initSmoothScroll()
     },
     initSmoothScroll(){
       gsap.registerPlugin(ScrollTrigger);
@@ -54,7 +72,7 @@ export default {
     },
     refresh(){
       ScrollTrigger.getAll().length > 0 && ScrollTrigger.refresh(true)
-      !isMobile && ScrollBuddy.update()
+      !isMobile && ScrollBuddy.reset()
     }
   }
 }
@@ -63,6 +81,20 @@ export default {
 <style lang="css">
 html{
   font-size: 16px;
+  background: white;
+}
+
+.bg-image{
+  background-size: cover;
+  background-position: center center;
+}
+
+.bg-top{
+  background-position: top center;
+}
+
+#content{
+  min-height: 50vh;
 }
 
 @media screen and (min-width:550px){
