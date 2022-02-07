@@ -73,7 +73,8 @@ export default {
   methods:{
     reveal(){
       gsap.timeline({onComplete: ()=> this.hide = false})
-      .to(this.navBar,1,{y:0,ease:'expo.out'})
+      .to(this.navBar,1,{y:0,ease:'expo.out'},0)
+      .to(this.button,1,{y:0,ease:'expo.out'},'<')
       .to(this.logo,1,{x:0,ease:'expo.out'},'<')
     },
     init(){
@@ -151,6 +152,9 @@ export default {
   }
   .has-js #nav.hide #nav__bar{
     transform: translateY(-100%);
+  }
+  .has-js #nav.hide #nav__button{
+    transform: translateY(-150%);
   }
 
   #nav__button svg{

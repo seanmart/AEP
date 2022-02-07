@@ -7,27 +7,22 @@
       </div>
       <the-footer/>
     </div>
-    <preloader v-if="renderPreloader"/>
   </main>
 </template>
 
 <script>
 export default {
-  data:()=>({
-    renderPreloader: true
-  }),
   created(){
     if(process.server) return
     this.initCreated()
   },
   mounted(){
     gsap.set('#scroller',{opacity:0})
-    this.$bus.$emit('PRELOADER',()=>{
+    setTimeout(()=>{
       gsap.to('#scroller',.25,{opacity:1})
       this.$bus.$emit('REVEAL')
-      this.renderPreloader = false
       this.refresh()
-    })
+    },500)
   },
   watch:{
     $route(){
