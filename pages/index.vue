@@ -108,6 +108,7 @@ export default {
   },
   destroyed(){
     this.mq && this.mq.kill()
+    this.linksAnim && this.linksAnim.kill()
   },
   data: () => ({
     data: {},
@@ -125,7 +126,7 @@ export default {
       if (!this.data.links || this.data.links.length == 0) return
       this.mq = ScreenBuddy.onLg((matches)=>{
         gsap.set([this.linksWrapper,this.link],{clearProps:'all'})
-        this.anim && this.anim.kill()
+        this.linksAnim && this.linksAnim.kill()
         matches ? this.linksVertical() : this.linksHorizontal()
       })
     },
@@ -134,7 +135,7 @@ export default {
       let offset = 20
       let limit = (this.link.length - 1) * (100 + gap)
       gsap.set(this.link,{x:(i)=> `${(i * (100 + gap)) - offset}%`})
-      this.anim = gsap.to(this.link, {
+      this.linksAnim = gsap.to(this.link, {
         duration: 50,
         ease: "none",
         x: `+=${limit}%`,
@@ -155,7 +156,7 @@ export default {
         let linkHeight = this.link[0].offsetHeight
         return (triggerHeight - linksHeight) + linkHeight / 2
       }
-      this.anim = gsap.to(this.linksWrapper,1,{y:offset, ease: 'none',scrollTrigger:{
+      this.linksAnim = gsap.to(this.linksWrapper,1,{y:offset, ease: 'none',scrollTrigger:{
         trigger:this.links,
         start:'top top',
         end:'bottom top',

@@ -1,6 +1,5 @@
 <template lang="html">
   <main id="site" class="text-black">
-    <preloader v-if="renderPreloader"/>
     <the-navigation/>
     <div id="scroller">
       <div id="content">
@@ -8,6 +7,7 @@
       </div>
       <the-footer/>
     </div>
+    <preloader v-if="renderPreloader"/>
   </main>
 </template>
 
@@ -81,7 +81,10 @@ export default {
 <style lang="css">
 html{
   font-size: 16px;
-  background: white;
+  background: #FFFFFF;
+}
+body{
+  background: #FFFFFF;
 }
 
 .bg-image{
